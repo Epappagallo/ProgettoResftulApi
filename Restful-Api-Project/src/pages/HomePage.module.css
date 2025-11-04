@@ -1,0 +1,34 @@
+/* src/pages/HomePage.module.css */
+.container {
+    padding: 50px;
+    text-align: center;
+    background-color: #f9f9f9;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+}
+
+.heading {
+    color: #333;
+}
+
+.description {
+    font-size: 1.2em;
+    color: #555;
+    margin: 20px 0;
+}
+
+.buttonContainer {
+    margin: 40px 0;
+}
+
+.loginButton {
+    padding: 12px 25px;
+    font-size: 1em;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+/* Aggiungeresti qui gli stili :hover, :focus, ecc. */
