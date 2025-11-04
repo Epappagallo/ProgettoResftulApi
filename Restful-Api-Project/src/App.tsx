@@ -1,45 +1,25 @@
-// src/App.tsx
-import React, { useState } from 'react';
+import React from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
+
 import HomePage from './pages/homePage';
 import LoginPage from './pages/loginPage';
-import { Routes, Route, useNavigate } from 'react-router-dom';
 
 import './App.css'; 
 
-// Definisco uno stato di accesso globale, lo terremo qui per ora
-type AuthState = {
-  isLoggedIn: boolean;
-  username: string | null;
+// [TEMPORANEA] Interfaccia semplificata, in attesa di definire pageProps.ts
+interface HomePageProps {
+  onNavigateToLogin: () => void;
 }
 
-const App: React.FC = () => {
-  // 💾 Stato per l'autenticazione
-  const [authState, setAuthState] = useState<AuthState>({
-    isLoggedIn: false,
-    username: null,
-  });
 
+const App: React.FC = () => {
+  // L'hook useNavigate è sufficiente per il routing
   const navigate = useNavigate();
 
-  // Gestione del successo del Login
-  const handleLoginSuccess = (userEmail: string) => {
-    setAuthState({
-      isLoggedIn: true,
-      username: userEmail,
-    });
-    // ✅ Reindirizza alla Home dopo il successo del login
-    navigate('/'); 
+  // Funzione per la navigazione al login, passata alla HomePage
+  const handleNavigateToLogin = () => {
+    navigate('/login');
   };
-
-  // Funzione per il Logout (se vuoi implementarla)
-  const handleLogout = () => {
-    setAuthState({
-      isLoggedIn: false,
-      username: null,
-    });
-    navigate('/login'); // Torna alla pagina di Login
-  };
-
 
   return (
     <div className="App">
@@ -49,13 +29,15 @@ const App: React.FC = () => {
         {/* Rotta della Home (Pagina principale) */}
         <Route 
           path="/" 
-          element={<HomePage onNavigateToLogin={() => navigate('/login')} />} 
+          // Uso la funzione di navigazione definita sopra
+          element={<HomePage onNavigateToLogin={handleNavigateToLogin} />} 
         />
         
         {/* Rotta di Login */}
         <Route 
           path="/login" 
-          element={<LoginPage onLoginSuccess={handleLoginSuccess} />} 
+          // Il componente LoginPage gestirà il proprio stato (username) e navigazione.
+          element={<LoginPage />} 
         />
         
         {/* Rotta di fallback per URL inesistenti */}
@@ -66,7 +48,6 @@ const App: React.FC = () => {
         
       </Routes>
       
-      {/* Nota: L'header/Footer comune andrebbe messo qui, fuori dalle Routes */}
     </div>
   );
 };
