@@ -2,37 +2,119 @@
 
 :root {
     --ebay-blue: #0071eb;
+    --border-color-black: #222;
+}
+
+.searchForm {
+    /* Prende tutto lo spazio disponibile */
+    flex-grow: 1;
+    width: 100%;
 }
 
 .searchContainer {
-    display: flex;
-    flex-grow: 1; /* Permette alla barra di ricerca di occupare lo spazio centrale */
-    max-width: 600px;
-    margin: 0 40px;
-    border: 3px solid var(--ebay-blue);
-    border-radius: 4px;
-    overflow: hidden; 
+    display: flex; /* ESSENZIALE: Affianca lente, input e categorie */
+    align-items: center;
+    border: 2px solid var(--border-color-black); /* Bordo nero di 2px */
+    
+    /* Bordi arrotondati completi sempre */
+    border-radius: 50px; 
+    
+    overflow-x: hidden; /* Mantiene i bordi arrotondati per gli elementi interni */
+    overflow-y: visible; /* Permette al menu di essere visibile */
+    background-color: white;
+    height: 40px; 
+    position: relative;
+}
+
+.searchIconLeft {
+    color: #333;
+    padding-left: 10px;
+    min-width: 40px;
 }
 
 .searchInput {
     flex-grow: 1;
-    padding: 10px 15px;
+    padding: 10px 0;
     border: none;
     font-size: 16px;
     outline: none;
+    background: transparent;
+    color: #333;
 }
 
-.searchButton {
-    background-color: var(--ebay-blue);
-    color: white;
-    padding: 10px 20px;
-    border: none;
+/* --- Menu Categorie (INTERNO) --- */
+.categoryDropdownWrapper {
+    position: relative;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    border-left: 4px solid var(--border-color-black); /* Bordo nero di 4px */
+    padding: 0 10px;
+    background-color: white;
+    z-index: 1001; /* Z-index più alto per assicurare che il menu sia visibile */
+}
+
+.categoryDropdown {
+    display: flex;
+    align-items: center;
+    padding: 0 10px; /* Aumentato di 5px */
+    height: 100%;
     cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
-    transition: background-color 0.2s;
+    transition: background-color 0.1s;
 }
 
-.searchButton:hover {
-    background-color: #0056b3;
+.categoryText {
+    color: #666; 
+    font-size: 12px; 
+    white-space: nowrap;
+}
+
+.categoryArrow {
+    margin-left: 5px;
+}
+
+.categoryDropdown:hover {
+    background-color: var(--ebay-blue); 
+}
+
+.categoryDropdown:hover .categoryText,
+.categoryDropdown:hover .categoryArrow {
+    color: white; 
+}
+
+/* Stili Menu a Tendina (Dropdown) */
+.dropdownMenu {
+    position: absolute;
+    top: 100%; 
+    left: -1px; 
+    background-color: white;
+    border: 1px solid var(--border-color-black);
+    border-top: none;
+    border-radius: 0 0 15px 15px; /* Bordi arrotondati solo in basso */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    min-width: 250px;
+    max-height: 300px; 
+    overflow-y: auto; 
+    z-index: 1000; /* Z-index più alto per essere sicuro che sia sopra */
+    margin-top: 5px; /* Piccolo spazio tra la search bar e il menu */
+}
+
+.dropdownMenu ul {
+    list-style: none;
+    padding: 5px 0; /* Padding per dare spazio ai bordi arrotondati */
+    margin: 0;
+}
+
+.dropdownItem {
+    padding: 8px 15px; 
+    cursor: default;
+    font-size: 12px;
+    color: #333;
+    user-select: none; /* Previene la selezione del testo */
+    border-radius: 8px; /* Bordi arrotondati per ogni item */
+    margin: 2px 8px; /* Margini per dare spazio ai bordi arrotondati */
+}
+
+.dropdownItem:hover {
+    background-color: #f5f5f5; 
 }

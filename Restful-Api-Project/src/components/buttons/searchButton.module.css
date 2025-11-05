@@ -1,0 +1,27 @@
+/* src/components/Common/SearchButton/SearchButton.module.css (Nuovo file) */
+
+:root {
+    --ebay-blue: #0071eb;
+    --border-color-black: #222;
+}
+
+.searchButton {
+    background-color: var(--ebay-blue);
+    color: white;
+    font-weight: bold;
+    padding: 10px 35px; /* Aumentato di 5px (da 30px a 35px) */
+    
+    /* Bottone separato dalla search bar */
+    border: 1px solid var(--border-color-black);
+    border-radius: 50px; /* Bordi tondeggianti completi */
+
+    cursor: pointer;
+    font-size: 16px;
+    height: 40px;
+    white-space: nowrap;
+    transition: opacity 0.2s;
+}
+
+.searchButton:hover {
+    opacity: 0.9;
+}
