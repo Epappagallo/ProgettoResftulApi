@@ -21,5 +21,3 @@ const Footer: React.FC<FooterProps> = ({ copyrightYear = new Date().getFullYear(
 };
 
 export default Footer;
-
-// NOTA: I suoi stili andrebbero in un Footer.module.css accanto

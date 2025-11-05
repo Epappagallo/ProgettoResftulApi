@@ -1,0 +1,75 @@
+/* src/components/Layout/Header/Header.module.css (AGGIORNATO) */
+
+:root {
+    /* ... (i tuoi colori esistenti) ... */
+    --ebay-blue: #0071eb;
+    --border-color: #e5e5e5;
+}
+
+.header {
+    background-color: #fff;
+    /* Rimuoviamo il border-bottom qui, è gestito dal MiniHeader e/o categoryNav */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* Nuova riga principale (ex topBar) */
+.mainHeaderRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px 20px;
+}
+
+/* --- Logo --- */
+.logoContainer {
+    min-width: 150px;
+}
+
+.logoText {
+    font-size: 28px;
+    font-weight: bold;
+    color: var(--ebay-blue); 
+}
+
+.logoLink {
+    text-decoration: none;
+}
+
+/* Spazio vuoto o per altri elementi a destra */
+.userSpaceFiller {
+    /* Assicura che la ricerca sia centrata */
+    min-width: 150px; 
+}
+
+
+/* --- Navigazione Categorie Secondaria (invariata) --- */
+.categoryNav {
+    background-color: #f7f7f7;
+    border-top: 1px solid var(--border-color);
+}
+
+.categoryList {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0 auto;
+    max-width: 1200px;
+    padding: 0 20px;
+}
+
+.categoryList li {
+    padding: 10px 15px;
+}
+
+.categoryLink {
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.categoryLink:hover {
+    color: var(--ebay-red);
+}

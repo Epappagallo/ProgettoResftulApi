@@ -1,0 +1,134 @@
+/* src/components/Layout/Header/MiniHeader.module.css */
+
+:root {
+    --ebay-blue: #0071eb;
+    --border-color: #e5e5e5;
+    --dropdown-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+}
+
+.miniHeaderContainer {
+    /* La tua richiesta: alto circa 20px */
+    height: 30px; 
+    background-color: white;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 13px;
+    color: #333;
+    /* Rende il contenitore un contesto per i menu a tendina se necessario */
+    position: relative; 
+    z-index: 10; /* Assicura che sia sopra altri elementi */
+}
+
+.contentWrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* --- Lista dei Link --- */
+.linkList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 15px; /* Spaziatura tra i link */
+}
+
+.navItem {
+    line-height: 1;
+    cursor: default; /* Il cursore predefinito per i non cliccabili */
+    position: relative;
+    padding: 5px 0; /* Aggiunge un po' di spazio verticale per il click/hover */
+    white-space: nowrap; /* Evita interruzioni di riga */
+}
+
+/* Sottolineatura e Puntatore per l'Hover (tutti i tasti) */
+.navItem:hover {
+    text-decoration: underline;
+    cursor: pointer; /* Lo mettiamo qui per coprire tutti i link hoverabili */
+}
+
+/* Link Accedi/Registrati */
+.blueLink {
+    color: var(--ebay-blue);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.blueLink:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* --- Menu a Tendina (Dropdown) --- */
+.dropdownContainer {
+    cursor: pointer; /* Forziamo il puntatore per il trigger */
+}
+
+.arrowIcon {
+    font-size: 14px;
+    margin-left: 3px;
+    vertical-align: middle;
+}
+
+.dropdownMenu {
+    position: absolute;
+    top: 100%; /* Sotto l'elemento che lo contiene */
+    right: 0; /* Allinea a destra del link */
+    background-color: white;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--dropdown-shadow);
+    padding: 8px 0;
+    min-width: 250px;
+    z-index: 20; /* Sopra tutto il resto */
+}
+
+.dropdownMenu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.dropdownItem {
+    padding: 8px 15px;
+    cursor: pointer;
+    white-space: normal;
+}
+
+.dropdownItem:hover {
+    background-color: #f5f5f5; /* Sfondo grigio al passaggio del mouse */
+    text-decoration: none; /* Rimuove la sottolineatura ereditata dal .navItem:hover */
+}
+
+.dropdownText {
+    padding: 8px 15px;
+    margin: 0;
+}
+
+
+/* --- Icone a Destra --- */
+.iconContainer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.iconWrapper {
+    padding: 2px 4px;
+    cursor: default; 
+    border-radius: 4px;
+    transition: background-color 0.1s;
+}
+
+.iconWrapper:hover {
+    background-color: #f0f0f0; /* Sfondo leggermente grigio all'hover */
+    cursor: pointer;
+}
+
+.serviceIcon {
+    vertical-align: middle;
+    color: #333;
+}
