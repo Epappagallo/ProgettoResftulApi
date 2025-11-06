@@ -1,50 +1,34 @@
-// src/services/ShopService.ts (NUOVO FILE)
+// src/services/ShopService.ts
 
-import type { ProductData } from  '../components/cards/productCard';
+import type { ProductData } from '../hooks/useShop';
 
-// Interfaccia per il Carrello
+// Interfaccia per il Carrello (CartItem è un ProductData esteso)
 export interface CartItem extends ProductData {
     quantity: number;
-    orderId: number; // ID fittizio dell'ordine
+    orderId: number; // ID fittizio dell'ordine generato dal Mock Server POST
 }
 
-// URL base di JSONPlaceholder per simulare i prodotti (useremo /posts)
-const JSON_PLACEHOLDER_URL = 'https://jsonplaceholder.typicode.com/posts';
-const MOCK_IMAGE_URLS = [
-    "https://i.imgur.com/e5t9I5Q.png", 
-    "https://i.imgur.com/p0T8cWf.png", 
-    "https://i.imgur.com/8Qj8nLd.png", 
-    "https://i.imgur.com/1B9kZgH.png", 
-    "https://i.imgur.com/9vG9T1c.png", 
-    "https://i.imgur.com/8xJ9jVf.png",
-];
+// ⭐ BASE URL DEL TUO MOCK SERVER POSTMAN
+const BASE_API_URL = 'https://34dcf2d6-239d-472f-a28d-8eb92dd3a99d.mock.pstmn.io';
 
-// Funzione helper per mappare i dati di JSONPlaceholder al nostro modello ProductData
-const mapToProductData = (data: any[]): ProductData[] => {
-    return data.slice(0, 6).map((item, index) => ({
-        id: item.id,
-        // Usiamo il titolo dell'API come titolo
-        title: item.title.length > 50 ? item.title.substring(0, 50) + '...' : item.title,
-        // Dati mock per prezzo, valuta, ecc.
-        price: 100 + item.id * 10, // Prezzo crescente
-        currency: "EUR",
-        conditionDetail: index % 2 === 0 ? "Professionale" : "Nuovo",
-        shippingText: index % 3 === 0 ? "Spedizione gratuita" : `+ EUR 9,99 sped.`,
-        imageUrl: MOCK_IMAGE_URLS[index] || MOCK_IMAGE_URLS[0], // Usiamo l'URL mock per l'immagine
-    }));
-};
+const getHeaders = () => ({
+    'Content-Type': 'application/json',
+});
 
 /**
- * 1. GET: Ottiene i dati dello shop (prodotti).
+ * 1. GET: Ottiene i dati dello shop (prodotti) dal Mock Server.
  */
 export const getProducts = async (): Promise<ProductData[]> => {
     try {
-        const response = await fetch(JSON_PLACEHOLDER_URL);
+        // ASSUMIAMO: Endpoint per i prodotti è '/items'
+        const response = await fetch(`${BASE_API_URL}/items`, { headers: getHeaders() });
+        
         if (!response.ok) {
-            throw new Error('Errore nel recupero dei prodotti');
+            throw new Error(`Errore nel recupero dei prodotti: ${response.status}`);
         }
-        const data = await response.json();
-        return mapToProductData(data);
+        
+        const data: ProductData[] = await response.json(); 
+        return data; 
     } catch (error) {
         console.error("Errore GET products:", error);
         return [];
@@ -52,32 +36,31 @@ export const getProducts = async (): Promise<ProductData[]> => {
 };
 
 /**
- * 2. POST: Aggiunge un prodotto al carrello (simula la creazione di un ordine).
+ * 2. POST: Aggiunge un prodotto al carrello.
  */
 export const postNewOrder = async (productId: number, quantity: number): Promise<CartItem> => {
-    console.log(`POST: Creazione nuovo ordine per Prodotto ID ${productId}, Quantità ${quantity}`);
-    
-    // In un mock server Postman, avresti qui:
-    // const response = await fetch('MOCK_POSTMAN_ORDER_URL', { method: 'POST', body: JSON.stringify({ productId, quantity }) });
-    
-    // Simulazione:
-    return new Promise(resolve => {
-        setTimeout(() => {
-            // Dati fittizi per l'elemento del carrello
-            resolve({
-                id: productId,
-                orderId: Date.now(), // ID Ordine unico
-                title: `Prodotto ${productId} (Ordine simulato)`,
-                price: 120.00, 
-                currency: "EUR",
-                conditionDetail: "Simulato",
-                shippingText: "Simulato",
-                imageUrl: MOCK_IMAGE_URLS[productId % MOCK_IMAGE_URLS.length],
-                quantity: quantity
-            });
-        }, 300);
-    });
+    try {
+        // ASSUMIAMO: Endpoint per aggiungere al carrello è '/cart'
+        const response = await fetch(`${BASE_API_URL}/cart`, {
+            method: 'POST',
+            headers: getHeaders(),
+            body: JSON.stringify({ productId, quantity })
+        });
+
+        if (!response.ok) {
+             throw new Error(`Errore POST new order: ${response.status}`);
+        }
+
+        // Il Mock Server DEVE restituire l'oggetto CartItem completo (con orderId)
+        const newCartItem: CartItem = await response.json();
+        return newCartItem;
+
+    } catch (error) {
+        console.error("Errore POST new order:", error);
+        throw error;
+    }
 };
+
 
 /**
  * 3. PUT: Modifica la quantità di un prodotto nel carrello.
@@ -85,29 +68,35 @@ export const postNewOrder = async (productId: number, quantity: number): Promise
 export const putUpdateQuantity = async (orderId: number, newQuantity: number): Promise<void> => {
     console.log(`PUT: Aggiornamento quantità Ordine ID ${orderId} a ${newQuantity}`);
     
-    // Simulazione:
-    return new Promise(resolve => {
-        setTimeout(resolve, 300);
+    const response = await fetch(`${BASE_API_URL}/cart/${orderId}`, {
+        method: 'PUT',
+        headers: getHeaders(),
+        body: JSON.stringify({ quantity: newQuantity })
     });
+
+    if (!response.ok) {
+        throw new Error(`Errore PUT update quantity: ${response.status}`);
+    }
 };
 
 /**
  * 4. DELETE: Elimina un ordine dal carrello.
  */
 export const deleteOrder = async (orderId: number): Promise<void> => {
-    console.log(`DELETE: Eliminazione Ordine ID ${orderId}`);
-    
-    // Simulazione:
-    return new Promise(resolve => {
-        setTimeout(resolve, 300);
+    const response = await fetch(`${BASE_API_URL}/cart/${orderId}`, {
+        method: 'DELETE',
+        headers: getHeaders(),
     });
+    
+    if (!response.ok) {
+        throw new Error(`Errore DELETE order: ${response.status}`);
+    }
 };
 
-// Funzione specifica per il bottone "Paga" (reset)
+/**
+ * 5. DELETE ALL: Paga e svuota il carrello.
+ */
 export const deleteAllOrders = async (orderIds: number[]): Promise<void> => {
-    console.log(`DELETE ALL: Eliminazione di tutti gli ordini:`, orderIds);
-    // Qui invieresti una richiesta DELETE al server (o loop di DELETE)
-    return new Promise(resolve => {
-        setTimeout(resolve, 500);
-    });
+    // Esecuzione in parallelo di tutte le eliminazioni
+    await Promise.all(orderIds.map(id => deleteOrder(id)));
 };

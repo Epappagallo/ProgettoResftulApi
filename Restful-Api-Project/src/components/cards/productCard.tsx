@@ -1,20 +1,20 @@
-// src/components/Common/ProductCard/ProductCard.tsx (REVISIONATO)
+// src/components/cards/productCard.tsx
 
 import React from 'react';
-import styles from './ProductCard.module.css';
-// Rimosse le icone non necessarie
+// Importa gli stili se li usi
+// import styles from './ProductCard.module.css';
+import { useShopContext } from '../../context/shopContext'; 
+import type { ProductData as HookProductData } from '../../hooks/useShop';
 
-// Interfaccia che definisce i dati che la card riceverà
-export interface ProductData {
-    id: number;
-    title: string;
-    price: number;
-    currency: string; // Es: "EUR"
-    conditionDetail: string; // Es: "Professionale"
-    shippingText: string; // Es: "Spedizione gratuita" o "+ EUR 9,90 sped."
-    extraInfo?: string; // Es: "73 venduti" o "Osservato da 43 persone"
-    imageUrl: string;
-    rating?: number; // Es: (1) per la quarta card
+// ⭐ INTERFACCIA: Deve includere description e stock!
+export interface ProductData extends HookProductData {
+    // L'hook usa 'name', la card usa 'title'
+    title: string; 
+    currency: string; 
+    conditionDetail: string; 
+    shippingText: string; 
+    extraInfo?: string; 
+    rating?: number; 
 }
 
 interface ProductCardProps {
@@ -22,71 +22,81 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-    // Funzione stub per simulare la navigazione
-    const handleClick = (e: React.MouseEvent) => {
+    const { addItemToCart, isLoading } = useShopContext();
+
+    const formatPrice = (price: number) => 
+        new Intl.NumberFormat('it-IT', { style: 'currency', currency: product.currency || "EUR" }).format(price);
+
+    // Gestisce la navigazione al dettaglio prodotto (simulazione)
+    const handleNavigate = (e: React.MouseEvent) => {
         e.preventDefault();
         console.log(`Naviga al prodotto ID: ${product.id}`);
     };
 
-    // Placeholder per la stella di rating (potrebbe essere un componente a parte in futuro)
+    // ⭐ FUNZIONE: Aggiunge l'articolo al carrello (POST API)
+    const handleAddToCart = (e: React.MouseEvent) => {
+        e.preventDefault(); 
+        e.stopPropagation(); // Evita che il click sul bottone apra il link
+        
+        if (product.stock <= 0) {
+            alert("Prodotto esaurito!");
+            return;
+        }
+        addItemToCart(product.id);
+    };
+
     const renderRating = () => {
         if (!product.rating) return null;
-        // In un'implementazione reale useremmo un'icona stella.
-        // Qui simuleremo con un placeholder
-        return (
-            <span className={styles.rating}>
-                ⭐ ({product.rating})
-            </span>
-        );
+        // Se usassi stili: <span className={styles.rating}>
+        return <span style={{ color: 'gold' }}>⭐ ({product.rating})</span>;
     }
 
     return (
-        <a href={`/prodotto/${product.id}`} className={styles.cardLink} onClick={handleClick}>
-            <div className={styles.card}>
+        <div style={{ border: '1px solid #ccc', padding: '10px', margin: '5px', borderRadius: '8px' }}>
+            {/* LINK PRINCIPALE */}
+            <a href={`/prodotto/${product.id}`} onClick={handleNavigate} style={{ textDecoration: 'none', color: 'inherit' }}>
                 
-                {/* 1. Immagine */}
-                <div className={styles.imageWrapper}>
-                    <img 
-                        src={product.imageUrl} 
-                        alt={product.title} 
-                        className={styles.productImage} 
-                    />
-                    {/* Rimosso il bottone Preferiti */}
+                <div style={{ height: '150px', overflow: 'hidden' }}>
+                    <img src={product.imageUrl} alt={product.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 </div>
 
-                {/* 2. Dettagli Prodotto */}
-                <div className={styles.details}>
-                    
-                    {/* Titolo */}
-                    <h3 className={styles.title} title={product.title}>
-                        {product.title}
-                    </h3>
-
-                    {/* Dettaglio Condizione (Es: Professionale) */}
-                    <div className={styles.conditionDetail}>{product.conditionDetail}</div>
-                    
-                    {/* Rating (se presente) */}
+                <div style={{ padding: '10px 0' }}>
+                    <h3 style={{ fontSize: '1em', margin: '5px 0' }}>{product.title}</h3>
+                    <div style={{ fontSize: '0.8em', color: '#555' }}>{product.conditionDetail}</div>
                     {renderRating()}
                     
-                    {/* Prezzo */}
-                    <div className={styles.priceContainer}>
-                        <span className={styles.currentPrice}>
-                            {product.currency} {product.price.toFixed(2).replace('.', ',')}
-                        </span>
+                    <div style={{ fontWeight: 'bold', fontSize: '1.2em', margin: '5px 0' }}>
+                        {formatPrice(product.price)}
                     </div>
 
-                    {/* Spedizione */}
-                    <div className={styles.shippingText}>
+                    <div style={{ fontSize: '0.9em', color: product.shippingText.includes('gratuita') ? 'green' : '#333' }}>
                         {product.shippingText}
                     </div>
 
-                    {/* Informazioni Aggiuntive (Venduti/Osservati) */}
-                    {product.extraInfo && (
-                        <div className={styles.extraInfo}>{product.extraInfo}</div>
-                    )}
+                    {product.extraInfo && (<div style={{ fontSize: '0.8em', color: 'blue' }}>{product.extraInfo}</div>)}
                 </div>
+            </a>
+            
+            {/* PULSANTE DI AZIONE CARRELLO */}
+            <div style={{ marginTop: '10px' }}>
+                <button
+                    onClick={handleAddToCart}
+                    disabled={isLoading || product.stock <= 0}
+                    style={{ 
+                        width: '100%', 
+                        padding: '8px', 
+                        backgroundColor: product.stock > 0 ? '#0066ff' : '#6c757d', 
+                        color: 'white', 
+                        border: 'none', 
+                        borderRadius: '4px', 
+                        cursor: 'pointer',
+                        fontWeight: 'bold'
+                    }}
+                >
+                    {isLoading ? 'Aggiunta...' : product.stock > 0 ? 'Aggiungi al Carrello' : 'Esaurito'}
+                </button>
             </div>
-        </a>
+        </div>
     );
 };
 

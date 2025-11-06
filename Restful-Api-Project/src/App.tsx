@@ -1,3 +1,5 @@
+// src/App.tsx
+
 import React from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { ShopProvider } from './context/shopContext';
@@ -5,79 +7,48 @@ import HomePage from './pages/homePage';
 import LoginPage from './pages/loginPage';
 import CartPage from './pages/cartPage';
 
-import './App.css'; 
+// NOTA: Devi avvolgere <App /> con <BrowserRouter> nel tuo index.tsx
 
-// [TEMPORANEA] Interfaccia semplificata, in attesa di definire pageProps.ts
-interface HomePageProps {
-  onNavigateToLogin: () => void;
-}
-
-
-const App: React.FC = () => {
-  // L'hook useNavigate è sufficiente per il routing
+const AppContent: React.FC = () => {
   const navigate = useNavigate();
 
-  // Funzione per la navigazione al login, passata alla HomePage
-  const handleNavigateToLogin = () => {
+  const handleNavigateToLogin = React.useCallback(() => {
     navigate('/login');
-  };
+  }, [navigate]);
   
-  // Funzione per la navigazione al carrello
-  const handleNavigateToCart = () => {
+  const handleNavigateToCart = React.useCallback(() => {
     navigate('/cart');
-  };
+  }, [navigate]);
   
-  // Funzione per la navigazione alla home
-  const handleNavigateToHome = () => {
+  const handleNavigateToHome = React.useCallback(() => {
     navigate('/');
+  }, [navigate]);
+
+  const navProps = {
+    onNavigateToLogin: handleNavigateToLogin,
+    onNavigateToCart: handleNavigateToCart,
+    onNavigateToHome: handleNavigateToHome,
   };
 
   return (
     <div className="App">
-      {/* 🌟 Avvolgiamo tutto nello ShopProvider per l'accesso globale allo stato */}
-      <ShopProvider>
-        
-        <Routes>
-          
-          {/* Rotta della Home (Pagina principale) */}
-          <Route 
-            path="/" 
-            element={
-              <HomePage 
-                onNavigateToLogin={handleNavigateToLogin} 
-                onNavigateToCart={handleNavigateToCart} // Passiamo la funzione al MiniHeader
-                onNavigateToHome={handleNavigateToHome} // Passiamo la funzione al Logo
-              />
-            } 
-          />
-          
-          {/* Rotta di Login */}
-          <Route 
-            path="/login" 
-            element={<LoginPage />} 
-          />
-          
-          {/* 🛒 Rotta del Carrello */}
-          <Route 
-            path="/cart" 
-            element={
-              <CartPage 
-                onNavigateToHome={handleNavigateToHome} // Passiamo la funzione per tornare allo shop
-              />
-            } 
-          />
-          
-          {/* Rotta di fallback per URL inesistenti */}
-          <Route 
-            path="*" 
-            element={<h1>404 | Pagina Non Trovata</h1>} 
-          />
-          
-        </Routes>
-        
-      </ShopProvider>
+      <Routes>
+        <Route path="/" element={<HomePage {...navProps} />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/cart" element={<CartPage {...navProps} />} />
+        <Route path="*" element={<h1>404 | Pagina Non Trovata</h1>} />
+      </Routes>
     </div>
   );
+};
+
+const App: React.FC = () => {
+    return (
+        // Lo ShopProvider avvolge tutta la logica di business
+        <ShopProvider>
+            <AppContent />
+        </ShopProvider>
+    );
 };
 
 export default App;
