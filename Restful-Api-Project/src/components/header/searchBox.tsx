@@ -18,12 +18,10 @@ const ebayCategories = [
 ];
 
 const SearchBox: React.FC = () => {
-    // Mantengo lo stato dello schermo per la visualizzazione del dropdown delle categorie
     const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth > 700);
     const [isCategoryOpen, setIsCategoryOpen] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState("Tutte le categorie"); 
 
-    // LOGICA RESPONSIVE: Aggiorna lo stato dello schermo
     useEffect(() => {
         const handleResize = () => {
             setIsLargeScreen(window.innerWidth > 700);

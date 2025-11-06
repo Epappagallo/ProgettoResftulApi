@@ -4,10 +4,8 @@ import React from 'react';
 import { useShopContext } from '../../context/shopContext';
 
 const Cart: React.FC = () => {
-    // 1. Estrai i dati e le funzioni necessarie dal contesto
-    const { cart, totalPrice, isLoading, error, updateCartItemQuantity, removeItemFromCart, checkout } = useShopContext();
 
-    // Gestione degli stati: Errore
+    const { cart, totalPrice, isLoading, error, updateCartItemQuantity, removeItemFromCart, checkout } = useShopContext();
     if (error) {
         return (
             <div style={{ textAlign: 'center', padding: '50px' }}>
@@ -17,19 +15,14 @@ const Cart: React.FC = () => {
         );
     }
     
-    // Gestione degli stati: Caricamento
     if (isLoading && cart.length === 0) {
         return <h2 style={{ textAlign: 'center', padding: '50px' }}>Caricamento Carrello...</h2>;
     }
 
-    // Gestione degli stati: Carrello Vuoto
     if (cart.length === 0) {
         return <h2 style={{ textAlign: 'center', padding: '50px' }}>Il tuo carrello è vuoto! 🛍️</h2>;
     }
 
-    // ----------------------------------------------------
-    // Stato: Visualizzazione Carrello
-    // ----------------------------------------------------
 
     return (
         <div style={{ maxWidth: '900px', margin: '0 auto', padding: '20px' }}>

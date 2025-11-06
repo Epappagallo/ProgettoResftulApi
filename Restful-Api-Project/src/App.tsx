@@ -7,8 +7,6 @@ import HomePage from './pages/homePage';
 import LoginPage from './pages/loginPage';
 import CartPage from './pages/cartPage';
 
-// NOTA: Devi avvolgere <App /> con <BrowserRouter> nel tuo index.tsx
-
 const AppContent: React.FC = () => {
   const navigate = useNavigate();
 
@@ -44,7 +42,7 @@ const AppContent: React.FC = () => {
 
 const App: React.FC = () => {
     return (
-        // Lo ShopProvider avvolge tutta la logica di business
+        
         <ShopProvider>
             <AppContent />
         </ShopProvider>

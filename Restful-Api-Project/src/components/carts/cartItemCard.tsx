@@ -9,29 +9,21 @@ interface CartItemCardProps {
 }
 
 const CartItemCard: React.FC<CartItemCardProps> = ({ item }) => {
-    // Otteniamo le funzioni di shop
     const { updateCartItemQuantity, removeItemFromCart, isLoading } = useShopContext();
-    // Usiamo lo stato locale per la quantità visualizzata
     const [quantity, setQuantity] = useState(item.quantity);
 
-    // Funzione per formattare il prezzo in Euro
     const formatPrice = (price: number) => 
         new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' }).format(price);
 
-    // Gestisce il cambio di quantità tramite input o pulsanti
     const handleQuantityChange = (newQuantity: number) => {
-        // Impedisce che la quantità scenda sotto 1 nell'input
         if (newQuantity < 1) return;
         
         setQuantity(newQuantity);
         
-        // Chiama la funzione PUT del carrello dopo un breve ritardo per evitare troppe chiamate API veloci
-        // (In un'app reale useremmo un debounce)
         updateCartItemQuantity(item.orderId, newQuantity);
     };
 
     const handleRemove = () => {
-        // Chiama la funzione DELETE del carrello
         removeItemFromCart(item.orderId);
     };
 

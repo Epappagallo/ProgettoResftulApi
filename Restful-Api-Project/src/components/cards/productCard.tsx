@@ -1,14 +1,10 @@
 // src/components/cards/productCard.tsx
 
 import React from 'react';
-// Importa gli stili se li usi
-// import styles from './ProductCard.module.css';
 import { useShopContext } from '../../context/shopContext'; 
 import type { ProductData as HookProductData } from '../../hooks/useShop';
 
-// ⭐ INTERFACCIA: Deve includere description e stock!
 export interface ProductData extends HookProductData {
-    // L'hook usa 'name', la card usa 'title'
     title: string; 
     currency: string; 
     conditionDetail: string; 
@@ -27,13 +23,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     const formatPrice = (price: number) => 
         new Intl.NumberFormat('it-IT', { style: 'currency', currency: product.currency || "EUR" }).format(price);
 
-    // Gestisce la navigazione al dettaglio prodotto (simulazione)
     const handleNavigate = (e: React.MouseEvent) => {
         e.preventDefault();
         console.log(`Naviga al prodotto ID: ${product.id}`);
     };
 
-    // ⭐ FUNZIONE: Aggiunge l'articolo al carrello (POST API)
     const handleAddToCart = (e: React.MouseEvent) => {
         e.preventDefault(); 
         e.stopPropagation(); // Evita che il click sul bottone apra il link
@@ -47,7 +41,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
     const renderRating = () => {
         if (!product.rating) return null;
-        // Se usassi stili: <span className={styles.rating}>
         return <span style={{ color: 'gold' }}>⭐ ({product.rating})</span>;
     }
 
