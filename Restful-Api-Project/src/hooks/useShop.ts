@@ -77,11 +77,10 @@ export const useShop = (): UseShopHook => {
     try {
       const url = `${MOCK_API_URL}/api/cart/${orderId}`;
       console.log(`[API REQUEST] DELETE: ${url}`);
-      
+
       const response = await fetch(url, {
         method: "DELETE",
       });
-      
       if (!response.ok && response.status !== 204) {
         console.error(`[API ERROR] DELETE: ${url} - Status: ${response.status}`);
         throw new Error("Rimozione non riuscita");
@@ -108,7 +107,7 @@ export const useShop = (): UseShopHook => {
         const url = `${MOCK_API_URL}/api/cart/${orderId}`;
         const body = JSON.stringify({ quantity: newQuantity });
         console.log(`[API REQUEST] PUT: ${url} - Body:`, body);
-        
+
         const response = await fetch(url, {
           method: "PUT",
           headers: HEADERS,
@@ -156,7 +155,7 @@ export const useShop = (): UseShopHook => {
           const url = `${MOCK_API_URL}/api/cart/add`;
           const body = JSON.stringify({ productId, quantity: 1 });
           console.log(`[API REQUEST] POST: ${url} - Body:`, body);
-          
+
           const response = await fetch(url, {
             method: "POST",
             headers: HEADERS,
@@ -170,10 +169,12 @@ export const useShop = (): UseShopHook => {
 
           const responseData = await response.json();
           console.log(`[API RESPONSE] POST: Articolo aggiunto:`, responseData);
-          
+
+          // Soluzione per ID statici del mock: usa un ID univoco lato client
+          const uniqueClientSideId = Date.now() + Math.random();
+
           const newCartItem: CartItem = {
-            // Se il mock restituisce un ID statico, questo genera un ID univoco lato client
-            orderId: responseData.orderId || Date.now() + Math.random(), 
+            orderId: uniqueClientSideId, 
             productId: productId,
             name: product.name,
             price: product.price,
