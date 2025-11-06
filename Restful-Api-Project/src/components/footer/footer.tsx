@@ -1,7 +1,6 @@
 // src/components/Footer/Footer.tsx
 import React from 'react';
 
-// Interfaccia opzionale, se il footer prendesse delle props (es. data copyright)
 interface FooterProps {
   copyrightYear?: number;
 }

@@ -1,0 +1,51 @@
+/* src/components/Common/ProductGrid/ProductGrid.module.css */
+
+:root {
+    --page-max-width: 1200px;
+}
+
+.gridContainer {
+    max-width: var(--page-max-width);
+    margin: 20px auto; /* Centra il contenuto e aggiunge margini verticali */
+    padding: 0 20px; /* Padding laterale per schermi piccoli */
+}
+
+.sectionTitle {
+    font-size: 20px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+}
+
+.grid {
+    display: grid;
+    /* 4 colonne su schermi larghi, con spaziatura di 20px */
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 20px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Adattamento Responsive: 3 colonne su tablet */
+@media (max-width: 1024px) {
+    .grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Adattamento Responsive: 2 colonne su schermi piccoli (es. smartphone orizzontale) */
+@media (max-width: 768px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Adattamento Responsive: 1 colonna su schermi piccolissimi */
+@media (max-width: 480px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
